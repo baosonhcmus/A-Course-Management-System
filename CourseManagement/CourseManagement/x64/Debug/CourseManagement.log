@@ -1,0 +1,4 @@
+﻿  Main.cpp
+  Manage.cpp
+  Generating Code...
+E:\KTLT\Bonus Project\A-Course-Management-System\CourseManagement\CourseManagement\Manage.cpp(12): error C4716: 'login': must return a value

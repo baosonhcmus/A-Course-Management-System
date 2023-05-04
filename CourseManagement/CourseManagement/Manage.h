@@ -6,62 +6,78 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include <conio.h>
 using namespace std;
 
-struct Account {
-    string username = "", password = "";
-    string firstName = "", lastName = "";
-    string Gender = ""; // 
-    string SocialID = "";
-    string birth = "";
-    int role; // 1 student, 2 teacher, 3 staff.
-    Account* next = nullptr, * prev = nullptr;
-};
-struct Score
-{
-    double totalMark = 0, finalMark = 0, midMark = 0, otherMark = 0;
+struct Date {
+    int dd;
+    int mm;
+    int yy;
 };
 
+struct Score
+{
+    double totalMark, finalMark, midMark;
+};
+// Luu danh sach tat ca cac tai khoan.
+struct Account {
+    string username , password;
+    string firstName , lastName;
+    int Gender ; // 0 Male,1 Female.
+    string SocialID ;
+    Date Dob;
+    int Role; // 1 student, 2 teacher, 3 staff.
+    Account* next;
+};
+struct AccountList {
+    Account* Head;
+};
+// Luu danh sach tat ca hoc sinh.
+struct Student
+{
+    Account* accStudent;
+    string ID;
+    Class* Class;
+    CourseList* course;
+    Student* next;
+
+};
+struct StudentList {
+    Student* Head;
+};
+//Luu danh sach tat ca cac khoa hoc.
+struct Course
+{
+    string name ;
+    string courseID ;
+    int numOfCredits , maxStudents = 50, numStudents;
+    string room ;
+    string teacherName ;
+    string day ;
+    string session ;
+    StudentCourse* studentCourseHead;
+    Course* next ;
+};
+struct CourseList
+{
+    Course* Head;
+};
+
+//Luu danh sach tat ca sinh vien trong 1 khoa hoc
 struct StudentCourse
 {
     string id = "";
     string fullname = "";
-    StudentCourse* next = nullptr, * prev = nullptr;
+    StudentCourse* next;
     Score sc;
 };
 
-struct Course
-{
-    string name = "";
-    string courseID = ""; 
-    int numOfCredits = 0, maxStudents = 50, numStudents = 0;
-    string room = "";
-    string teacherName = "";
-    string day = "";    
-    string session = "";
-    StudentCourse* studentCourse = nullptr;
-    Course* next = nullptr, * prev = nullptr;
-};
 
-struct CourseList
-{
-    Course* course = nullptr;
-    CourseList* next = nullptr;
-};
-
-struct Student
-{
-    Account* accStudent = nullptr;
-    string ID = "";
-    CourseList* course = nullptr;
-    Student* next = nullptr, * prev = nullptr;
-};
-
+//Luu danh sach tat ca cac lop.
 struct Class
 {
-    string name; 
-    Student* studentOnClass = nullptr;
-    Class* next = nullptr, * prev = nullptr;
+    string name;
+    Class* next;
 };
 
 struct Semester
@@ -69,15 +85,14 @@ struct Semester
     int No;   
     int Year;
     string startDate, endDate;
-    Course* course = nullptr;
-    Semester* next = nullptr, * prev = nullptr;
+    Course* courseHead ;
+    Semester* next;
 };
 
 struct Year
 {
     int yearStart;
-    Class* Class = nullptr;
-    Semester* Semester = nullptr;
-    Year* next = nullptr;
-    Year* prev = nullptr;
+    Class* Class;
+    Semester* Semester;
+    Year* next;
 };
