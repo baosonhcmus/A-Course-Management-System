@@ -1,15 +1,77 @@
 #include "Manage.h"
 
-Account* login(AccountList* src,Account * acc) {
+Account* getNode(AccountInf a) {
+    Account* p = new Account;
+    if (p == NULL) {
+        printf("loi het bo nho: "); exit(0);
+    }
+
+    p->acc = a;
+    p->next = NULL;
+    return p;
+}
+
+void loadAccount(AccountList& l) {
+    fstream fin;
+    fin.open("account.csv", ios::in);
+    string line, word, temp;
+    fin >> temp;
+    cout << temp;
+    while (fin >> temp) {
+
+        string row[10];
+        stringstream s(temp);
+        AccountInf k;
+        int i = 0;
+        string::size_type sz;
+        while (getline(s, word,',')) {  
+            row[i] = word;
+            i++;
+        }
+        k.username = row[0];
+        k.password = row[1];
+        k.firstName = row[2];
+        k.lastName = row[3];
+        k.Gender = stoi(row[4],&sz);
+        k.SocialID = row[5];
+        stringstream ss(row[6]);
+        string token;
+        int count = 0;
+        while (!ss.eof()) {
+            getline(ss, token,'-');
+            if (count == 0) k.Dob.yy = stoi(token, &sz);
+            else if (count == 1) k.Dob.mm = stoi(token, &sz);
+            else k.Dob.dd = stoi(token, &sz);
+            count++;
+        }
+        k.Role = stoi(row[7], &sz);
+
+        Account* temp, * p;
+        temp = getNode(k);
+        if (l.Head == NULL) {
+            l.Head = temp;
+        }
+        else {
+            p = l.Head;
+            while (p->next != NULL) {
+                p = p->next;
+            }
+            p->next = temp;
+        }
+    }
+
+}
+
+Account* login(AccountList* l,Account * a) {
 	string username;
 	string password;
 	cout << "User name: ";
-	getline(cin, acc->username);
+	getline(cin, a->acc.username);
 	cout << "Password: ";
-	getline(cin, acc->password);
+	getline(cin, a->acc.password);
 	
-	for (Account* p = src->Head; p; p = p->next) {
-		if ((p->username == acc->username) && (p->password == acc->password)) {
+	for (Account* p = l->Head; p; p = p->next) {
+		if ((p->acc.username == a->acc.username) && (p->acc.password == a->acc.password)) {
 			printf("Dang nhap thanh cong. ");
             return p;
 		}
@@ -17,8 +79,8 @@ Account* login(AccountList* src,Account * acc) {
 	printf("Dang nhap khong thanh cong !!!");
 }
 
-void Menu(Account * acc) {
-	switch (acc->Role)
+void Menu(Account * a) {
+	switch (a->acc.Role)
 	{
 	case 1:
 	case 2:
@@ -63,4 +125,17 @@ int StudentMenu() {
             break;
         }
     }
+}
+
+int main() {
+    AccountList l;
+    l.Head = new Account;
+    if (l.Head == NULL) {
+        printf("khong du bo nho: ");
+        exit(0);
+    }
+    l.Head->next = NULL;
+    loadAccount(l);
+    return 0;
+
 }

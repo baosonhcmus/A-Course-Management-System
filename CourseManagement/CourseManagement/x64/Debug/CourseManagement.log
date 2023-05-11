@@ -1,4 +1,3 @@
-﻿  Main.cpp
-  Manage.cpp
-  Generating Code...
-E:\KTLT\Bonus Project\A-Course-Management-System\CourseManagement\CourseManagement\Manage.cpp(12): error C4716: 'login': must return a value
+﻿  Manage.cpp
+E:\KTLT\Bonus Project\A-Course-Management-System\CourseManagement\CourseManagement\Manage.cpp(84): warning C4715: 'login': not all control paths return a value
+  CourseManagement.vcxproj -> E:\KTLT\Bonus Project\A-Course-Management-System\CourseManagement\x64\Debug\CourseManagement.exe
