@@ -15,8 +15,7 @@ void loadAccount(AccountList& l) {
     fstream fin;
     fin.open("account.csv", ios::in);
     string line, word, temp;
-    fin >> temp;
-    cout << temp;
+    int n = 0;
     while (fin >> temp) {
 
         string row[10];
@@ -28,7 +27,11 @@ void loadAccount(AccountList& l) {
             row[i] = word;
             i++;
         }
-        k.username = row[0];
+        if (n==0){ 
+            row[0].erase(0,3);
+            k.username = row[0]; 
+        }
+        else k.username = row[0];
         k.password = row[1];
         k.firstName = row[2];
         k.lastName = row[3];
@@ -58,25 +61,28 @@ void loadAccount(AccountList& l) {
             }
             p->next = temp;
         }
+        n++;
     }
 
 }
+void outputAcc(AccountList l) {
+    for (Account* p = l.Head; p; p=p->next) {
+        cout << p->acc.username << "\t" << p->acc.password << "\t" << p->acc.lastName << endl;
+    }
+}
 
-Account* login(AccountList* l,Account * a) {
-	string username;
-	string password;
-	cout << "User name: ";
-	getline(cin, a->acc.username);
-	cout << "Password: ";
-	getline(cin, a->acc.password);
-	
-	for (Account* p = l->Head; p; p = p->next) {
+int login(AccountList l,Account* a) {
+
+	for (Account* p = l.Head; p; p = p->next) {
 		if ((p->acc.username == a->acc.username) && (p->acc.password == a->acc.password)) {
 			printf("Dang nhap thanh cong. ");
-            return p;
+            a = p;
+            return 1;
 		}
 	}
 	printf("Dang nhap khong thanh cong !!!");
+    _getch();
+    return 0;
 }
 
 void Menu(Account * a) {
@@ -135,7 +141,19 @@ int main() {
         exit(0);
     }
     l.Head->next = NULL;
+    cout << "loading account...\n";
     loadAccount(l);
+    //outputAcc(l);
+    Account* a = new Account;
+    do { 
+        system("cls");
+        cout << "User name: ";
+        getline(cin, a->acc.username);
+        cout << "Password: ";
+        getline(cin, a->acc.password);
+    } while (!login(l,a));
+
+
     return 0;
 
 }

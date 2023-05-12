@@ -107,6 +107,6 @@ struct Year
 
 Account* getNode(AccountInf a);
 void loadAccount(AccountList& l);
-Account* login(AccountList* l, Account* a);
+int login(AccountList l,Account * a);
 void Menu(Account* a);
 int StudentMenu();
