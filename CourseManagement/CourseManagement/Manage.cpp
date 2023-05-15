@@ -76,7 +76,7 @@ int login(AccountList l,Account* a) {
 	for (Account* p = l.Head; p; p = p->next) {
 		if ((p->acc.username == a->acc.username) && (p->acc.password == a->acc.password)) {
 			printf("Dang nhap thanh cong. ");
-            a = p;
+            *a = *p;
             return 1;
 		}
 	}
@@ -96,28 +96,80 @@ void Menu(Account * a) {
 		break;
 	}
 }
+void viewProfileAcc(Account* a) {
+    cout << "First Name: " << a->acc.firstName << endl;
+    cout << "Last Name: " << a->acc.lastName << endl;
+    cout << "Gender: ";
+    if (a->acc.Gender == 0) cout << "Male" << endl;
+    else cout << "Female" << endl;
+    cout << "Social ID: " << a->acc.SocialID << endl;
+    cout << "Date of birth: " << a->acc.Dob.dd << "/" << a->acc.Dob.mm << "/" << a->acc.Dob.yy << endl;
+    cout << "Position: ";
+    if (a->acc.Role == 1) cout << "Staff" << endl;
+    else cout << "Student" << endl;
+}
+void changePassAcc(AccountList& l, Account* a) {
+    cout << "Enter old password: ";
+    string oldpass;
+    cin.ignore(1);
+    getline(cin, oldpass);
+    if (oldpass == a->acc.password) {
+        cout << "Enter new password: ";
+        string newpass;
+        getline(cin, newpass);
+        Account* p = l.Head;
+        while (p->acc.username != a->acc.username) {
+            p = p->next;
+        }
+        p->acc.password = newpass;
+        fstream fin;
+        fin.open("account.csv", ios::in);
+        string line[50];
+        string temp;
+        int i = 0;
+        int pos =0;
+        while (fin >> temp) {
+            line[i] = temp;
+            if (temp.find(a->acc.SocialID) != string::npos) pos = i;
+            i++;
+        }
+        fin.close();
+        ofstream outfile;
+        outfile.open("account.csv", ios::out | ios::trunc);
+        for (int j = 0; j < i; j++) {
+            if (j != pos) outfile << line[j] << endl;
+        }
+        outfile << a->acc.username << "," << newpass << "," << a->acc.firstName << "," << a->acc.lastName << "," << a->acc.Gender << "," << a->acc.SocialID << "," << a->acc.Dob.yy << "-" << a->acc.Dob.mm << "-" << a->acc.Dob.dd << "," << a->acc.Role;
+        outfile.close();
+        cout << "Change password successfully.";
+    }
+    else cout << "Wrong password !!!";
+}
 
-int StudentMenu() {
+int App_Student(AccountList& l,Account* a) {
     int k;
     while (true) {
         system("cls");
-        cout << "HOC SINH\n";
+        cout << "STUDENT\n";
         cout << "*************************MENU**************************\n";
-        cout << "**  1. Nhap danh sach sinh vien.                     **\n";
-        cout << "**  2. Xuat danh sach sinh vien.                     **\n";
-        cout << "**  3. Dem so luong sinh vien.                       **\n";
-        cout << "**  0. Thoat                                         **\n";
+        cout << "**  1. Change pass.                                  **\n";
+        cout << "**  2. View profile.                                 **\n";
+        cout << "**  3. ...                                           **\n";
+        cout << "**  4. Log out.                                      **\n";
+        cout << "**  0. Exit.                                         **\n";
         cout << "*******************************************************\n";
         cout << "Nhap tuy chon: ";
         cin >> k;
         switch (k) {
         case 1:
+            changePassAcc(l, a);
             _getch();
             break;
         case 2:
+            viewProfileAcc(a);
             _getch();
             break;
-        case 3:
+        case 4:
             _getch();
             break;
         case 0:
@@ -152,6 +204,10 @@ int main() {
         cout << "Password: ";
         getline(cin, a->acc.password);
     } while (!login(l,a));
+
+    if (a->acc.Role == 2) {
+        App_Student(l, a);
+    }
 
 
     return 0;

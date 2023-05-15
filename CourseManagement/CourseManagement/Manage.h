@@ -52,7 +52,7 @@ struct AccountInf {
     int Gender; // 0 Male,1 Female.
     string SocialID;
     Date Dob;
-    int Role; // 1 student, 2 staff.
+    int Role; // 1 staff, 2 student.
 };
 // Luu danh sach tat ca cac tai khoan.
 struct Account {
